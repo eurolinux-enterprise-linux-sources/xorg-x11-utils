@@ -2,32 +2,31 @@
 
 Summary: X.Org X11 X client utilities
 Name: xorg-x11-%{pkgname}
-Version: 7.4
-Release: 8%{?dist}
+Version: 7.5
+Release: 6%{?dist}
 License: MIT
 Group: User Interface/X
 URL: http://www.x.org
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-Source0:  ftp://ftp.x.org/pub/individual/app/xdpyinfo-1.0.3.tar.bz2
-Source2:  ftp://ftp.x.org/pub/individual/app/xev-1.0.4.tar.bz2
-Source5:  ftp://ftp.x.org/pub/individual/app/xlsatoms-1.0.2.tar.bz2
-Source6:  ftp://ftp.x.org/pub/individual/app/xlsclients-1.0.1.tar.bz2
-Source7:  ftp://ftp.x.org/pub/individual/app/xlsfonts-1.0.2.tar.bz2
-Source8:  ftp://ftp.x.org/pub/individual/app/xprop-1.1.0.tar.bz2
-Source9:  ftp://ftp.x.org/pub/individual/app/xvinfo-1.0.2.tar.bz2
-Source10: ftp://ftp.x.org/pub/individual/app/xwininfo-1.0.5.tar.bz2
+Source0:  ftp://ftp.x.org/pub/individual/app/xdpyinfo-1.3.0.tar.bz2
+Source2:  ftp://ftp.x.org/pub/individual/app/xev-1.1.0.tar.bz2
+Source5:  ftp://ftp.x.org/pub/individual/app/xlsatoms-1.1.0.tar.bz2
+Source6:  ftp://ftp.x.org/pub/individual/app/xlsclients-1.1.2.tar.bz2
+Source7:  ftp://ftp.x.org/pub/individual/app/xlsfonts-1.0.3.tar.bz2
+Source8:  ftp://ftp.x.org/pub/individual/app/xprop-1.2.1.tar.bz2
+Source9:  ftp://ftp.x.org/pub/individual/app/xvinfo-1.1.1.tar.bz2
+Source10: ftp://ftp.x.org/pub/individual/app/xwininfo-1.1.1.tar.bz2
 
-Source100: edid-decode-20100611.tar.xz
+Source100: edid-decode-20100205.tar.xz
 Source101: make-edid-decode-snapshot.sh
 
 BuildRequires: pkgconfig(dmx) pkgconfig(gl) pkgconfig(xext) pkgconfig(xft)
 BuildRequires: pkgconfig(xi) pkgconfig(xinerama) pkgconfig(xmu)
 BuildRequires: pkgconfig(xpm) pkgconfig(xt) pkgconfig(xtst) pkgconfig(xv)
 BuildRequires: pkgconfig(xxf86dga) pkgconfig(xxf86misc) pkgconfig(xxf86vm)
+BuildRequires: pkgconfig(xcb) pkgconfig(xcb-atom)
 
-Provides: xdpyinfo xev xlsatoms xlsclients xlsfonts xprop xvinfo xwininfo
-Provides: edid-decode
+Provides: edid-decode xdpyinfo xev xlsatoms xlsclients xlsfonts xprop xvinfo xwininfo
 
 %description
 A collection of client utilities which can be used to query the X server
@@ -42,7 +41,7 @@ for various information.
    for app in * ; do
       pushd $app
       if [ -e ./configure ] ; then
-        %configure
+	%configure
       fi
       make
       popd
@@ -85,8 +84,41 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/xwininfo.1*
 
 %changelog
-* Fri Jun 11 2010 Adam Jackson <ajax@redhat.com> 7.4-8
-- edid-decode snapshot (#492995)
+* Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 7.5-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
+* Tue Nov 29 2011 Adam Jackson <ajax@redhat.com> 7.5-5
+- xlsclients 1.1.2
+- Rebuild for new xcb-util
+
+* Wed Nov 09 2011 Adam Jackson <ajax@redhat.com> 7.5-4
+- xdpyinfo 1.3.0
+
+* Mon Sep 12 2011 Adam Jackson <ajax@redhat.com> 7.5-3
+- xprop 1.2.1
+
+* Tue Feb 08 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 7.5-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
+
+* Mon Nov 08 2010 Peter Hutterer <peter.hutterer@redhat.com> 7.5-1
+- xvinfo 1.1.1
+- xev 1.1.0
+- xdpyinfo 1.2.0
+- xwininfo 1.1.0
+- xlsclients 1.1.0
+- xlsfonts 1.0.3
+
+* Fri Jun 04 2010 Adam Jackson <ajax@redhat.com> 7.4-10
+- xlsatoms 1.1.0
+- xlsclients 1.1.0
+
+* Fri Feb 05 2010 Adam Jackson <ajax@redhat.com> 7.4-9
+- edid-decode snapshot
+
+* Mon Oct 19 2009 Adam Jackson <ajax@redhat.com> 7.4-8
+- xdpyinfo 1.1.0
+- xlsclients 1.0.2
+- xvinfo 1.1.0
 
 * Tue Oct 13 2009 Adam Jackson <ajax@redhat.com> 7.4-7
 - xev 1.0.4
