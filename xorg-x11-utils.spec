@@ -3,19 +3,19 @@
 Summary: X.Org X11 X client utilities
 Name: xorg-x11-%{pkgname}
 Version: 7.5
-Release: 22%{?dist}
+Release: 23%{?dist}
 License: MIT
 Group: User Interface/X
 URL: http://www.x.org
 
-Source0:  ftp://ftp.x.org/pub/individual/app/xdpyinfo-1.3.2.tar.bz2
-Source2:  ftp://ftp.x.org/pub/individual/app/xev-1.2.2.tar.bz2
-Source5:  ftp://ftp.x.org/pub/individual/app/xlsatoms-1.1.2.tar.bz2
-Source6:  ftp://ftp.x.org/pub/individual/app/xlsclients-1.1.3.tar.bz2
-Source7:  ftp://ftp.x.org/pub/individual/app/xlsfonts-1.0.5.tar.bz2
-Source8:  ftp://ftp.x.org/pub/individual/app/xprop-1.2.2.tar.bz2
-Source9:  ftp://ftp.x.org/pub/individual/app/xvinfo-1.1.3.tar.bz2
-Source10: ftp://ftp.x.org/pub/individual/app/xwininfo-1.1.3.tar.bz2
+Source0:  https://www.x.org/pub/individual/app/xdpyinfo-1.3.2.tar.bz2
+Source2:  https://www.x.org/pub/individual/app/xev-1.2.2.tar.bz2
+Source5:  https://www.x.org/pub/individual/app/xlsatoms-1.1.2.tar.bz2
+Source6:  https://www.x.org/pub/individual/app/xlsclients-1.1.4.tar.bz2
+Source7:  https://www.x.org/pub/individual/app/xlsfonts-1.0.6.tar.bz2
+Source8:  https://www.x.org/pub/individual/app/xprop-1.2.3.tar.bz2
+Source9:  https://www.x.org/pub/individual/app/xvinfo-1.1.3.tar.bz2
+Source10: https://www.x.org/pub/individual/app/xwininfo-1.1.3.tar.bz2
 
 Source100: edid-decode-20170328.tar.xz
 Source101: make-edid-decode-snapshot.sh
@@ -95,6 +95,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/xwininfo.1*
 
 %changelog
+* Tue May 22 2018 Adam Jackson <ajax@redhat.com> - 7.5-23
+- xlsclients 1.1.4
+- xlsfonts 1.0.6
+- xprop 1.2.3
+- HTTPS URLs
+
 * Tue Mar 28 2017 Adam Jackson <ajax@redhat.com> - 7.5-22
 - New edid-decode snapshot
 
