@@ -78,10 +78,6 @@ in this Software without prior written authorization from The Open Group.
 
 #endif
 
-#ifdef WIN32
-#include <X11/Xwindows.h>
-#endif
-
 #include <X11/Xlib-xcb.h>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
@@ -141,11 +137,14 @@ in this Software without prior written authorization from The Open Group.
 #include <stdio.h>
 #include <stdlib.h>
 
+/* Turn a NULL pointer string into an empty string */
+#define NULLSTR(x) (((x)!=NULL)?(x):(""))
+
 static char *ProgramName;
 static Bool queryExtensions = False;
 
 static int
-silent_errors(_X_UNUSED Display *dpy, _X_UNUSED XErrorEvent *ev)
+silent_errors(Display *dpy, XErrorEvent *ev)
 {
     return 0;
 }
@@ -156,7 +155,7 @@ static int print_event_mask(char *buf, int lastcol, int indent, long mask);
 
 static int StrCmp(const void *a, const  void *b)
 {
-    return strcmp(*(const char * const *)a, *(const char * const *)b);
+    return strcmp(*(char **)a, *(char **)b);
 }
 
 static void
@@ -333,8 +332,7 @@ print_display_info(Display *dpy)
       case LSBFirst:    cp = "LSBFirst"; break;
       case MSBFirst:    cp = "MSBFirst"; break;
       default:
-	snprintf (dummybuf, sizeof(dummybuf),
-                  "unknown order %d", BitmapBitOrder (dpy));
+	sprintf (dummybuf, "unknown order %d", BitmapBitOrder (dpy));
 	cp = dummybuf;
 	break;
     }
@@ -345,8 +343,7 @@ print_display_info(Display *dpy)
       case LSBFirst:    cp = "LSBFirst"; break;
       case MSBFirst:    cp = "MSBFirst"; break;
       default:
-	snprintf (dummybuf, sizeof(dummybuf),
-                  "unknown order %d", ImageByteOrder (dpy));
+	sprintf (dummybuf, "unknown order %d", ImageByteOrder (dpy));
 	cp = dummybuf;
 	break;
     }
@@ -420,7 +417,7 @@ print_visual_info(XVisualInfo *vip)
       case TrueColor:    class = "TrueColor"; break;
       case DirectColor:    class = "DirectColor"; break;
       default:
-	snprintf (errorbuf, sizeof(errorbuf), "unknown class %d", vip->class);
+	sprintf (errorbuf, "unknown class %d", vip->class);
 	class = errorbuf;
 	break;
     }
@@ -1278,15 +1275,15 @@ static int print_dmx_info(Display *dpy, const char *extname)
                         if (ext
                             && ext != (XExtensionVersion *)NoSuchExtension) {
 
-                            int         dcount, d;
+                            int         count, i;
                             XDeviceInfo *devInfo = XListInputDevices(backend,
-                                                                     &dcount);
+                                                                     &count);
                             if (devInfo) {
-                                for (d = 0; d < dcount; d++) {
+                                for (i = 0; i < count; i++) {
                                     if ((unsigned)iinfo.physicalId
-                                        == devInfo[d].id
-                                        && devInfo[d].name) {
-                                        backendname = strdup(devInfo[d].name);
+                                        == devInfo[i].id
+                                        && devInfo[i].name) {
+                                        backendname = strdup(devInfo[i].name);
                                         break;
                                     }
                                 }
@@ -1372,7 +1369,7 @@ static ExtensionPrintInfo known_extensions[] =
     /* add new extensions here */
 };
 
-static const int num_known_extensions = sizeof known_extensions / sizeof known_extensions[0];
+static int num_known_extensions = sizeof known_extensions / sizeof known_extensions[0];
 
 static void
 print_known_extensions(FILE *f)
@@ -1435,15 +1432,14 @@ print_marked_extensions(Display *dpy)
     }
 }
 
-static void _X_NORETURN
+static void
 usage(void)
 {
-    fprintf (stderr, "usage:  %s [options]\n%s", ProgramName,
-             "-display displayname\tserver to query\n"
-             "-version\t\tprint program version and exit\n"
-             "-queryExtensions\tprint info returned by XQueryExtension\n"
-             "-ext all\t\tprint detailed info for all supported extensions\n"
-             "-ext extension-name\tprint detailed info for extension-name if one of:\n     ");
+    fprintf (stderr, "usage:  %s [options]\n", ProgramName);
+    fprintf (stderr, "-display displayname\tserver to query\n");
+    fprintf (stderr, "-queryExtensions\tprint info returned by XQueryExtension\n");
+    fprintf (stderr, "-ext all\t\tprint detailed info for all supported extensions\n");
+    fprintf (stderr, "-ext extension-name\tprint detailed info for extension-name if one of:\n     ");
     print_known_extensions(stderr);
     fprintf (stderr, "\n");
     exit (1);
@@ -1460,32 +1456,18 @@ main(int argc, char *argv[])
 
     for (i = 1; i < argc; i++) {
 	char *arg = argv[i];
-	size_t len = strlen(arg);
+	int len = strlen(arg);
 
 	if (!strncmp("-display", arg, len)) {
-	    if (++i >= argc) {
-		fprintf (stderr, "%s: -display requires an argument\n",
-			 ProgramName);
-		usage ();
-	    }
+	    if (++i >= argc) usage ();
 	    displayname = argv[i];
 	} else if (!strncmp("-queryExtensions", arg, len)) {
 	    queryExtensions = True;
 	} else if (!strncmp("-ext", arg, len)) {
-	    if (++i >= argc) {
-		fprintf (stderr, "%s: -ext requires an argument\n",
-			 ProgramName);
-		usage ();
-	    }
+	    if (++i >= argc) usage ();
 	    mark_extension_for_printing(argv[i]);
-        } else if (!strncmp("-version", arg, len)) {
-            printf("%s\n", PACKAGE_STRING);
-            exit (0);
-	} else {
-	    fprintf (stderr, "%s: unrecognized argument '%s'\n",
-		     ProgramName, arg);
+	} else
 	    usage ();
-	}
     }
 
     dpy = XOpenDisplay (displayname);

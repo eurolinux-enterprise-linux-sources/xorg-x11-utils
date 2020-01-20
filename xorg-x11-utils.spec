@@ -3,24 +3,22 @@
 Summary: X.Org X11 X client utilities
 Name: xorg-x11-%{pkgname}
 Version: 7.5
-Release: 23%{?dist}
+Release: 9%{?dist}
 License: MIT
 Group: User Interface/X
 URL: http://www.x.org
 
-Source0:  https://www.x.org/pub/individual/app/xdpyinfo-1.3.2.tar.bz2
-Source2:  https://www.x.org/pub/individual/app/xev-1.2.2.tar.bz2
-Source5:  https://www.x.org/pub/individual/app/xlsatoms-1.1.2.tar.bz2
-Source6:  https://www.x.org/pub/individual/app/xlsclients-1.1.4.tar.bz2
-Source7:  https://www.x.org/pub/individual/app/xlsfonts-1.0.6.tar.bz2
-Source8:  https://www.x.org/pub/individual/app/xprop-1.2.3.tar.bz2
-Source9:  https://www.x.org/pub/individual/app/xvinfo-1.1.3.tar.bz2
-Source10: https://www.x.org/pub/individual/app/xwininfo-1.1.3.tar.bz2
+Source0:  ftp://ftp.x.org/pub/individual/app/xdpyinfo-1.3.0.tar.bz2
+Source2:  ftp://ftp.x.org/pub/individual/app/xev-1.2.1.tar.bz2
+Source5:  ftp://ftp.x.org/pub/individual/app/xlsatoms-1.1.1.tar.bz2
+Source6:  ftp://ftp.x.org/pub/individual/app/xlsclients-1.1.2.tar.bz2
+Source7:  ftp://ftp.x.org/pub/individual/app/xlsfonts-1.0.4.tar.bz2
+Source8:  ftp://ftp.x.org/pub/individual/app/xprop-1.2.1.tar.bz2
+Source9:  ftp://ftp.x.org/pub/individual/app/xvinfo-1.1.1.tar.bz2
+Source10: ftp://ftp.x.org/pub/individual/app/xwininfo-1.1.2.tar.bz2
 
-Source100: edid-decode-20170328.tar.xz
+Source100: edid-decode-20100205.tar.xz
 Source101: make-edid-decode-snapshot.sh
-
-Patch1: 0001-xwininfo-do-not-segfault-on-IO-error.patch
 
 BuildRequires: autoconf automake libtool
 BuildRequires: pkgconfig(xorg-macros)
@@ -29,7 +27,6 @@ BuildRequires: pkgconfig(xi) pkgconfig(xinerama) pkgconfig(xmu) pkgconfig(xrandr
 BuildRequires: pkgconfig(xpm) pkgconfig(xt) pkgconfig(xtst) pkgconfig(xv)
 BuildRequires: pkgconfig(xxf86dga) pkgconfig(xxf86misc) pkgconfig(xxf86vm)
 BuildRequires: pkgconfig(xcb) pkgconfig(xcb-atom)
-BuildRequires: gettext-devel
 
 Provides: edid-decode xdpyinfo xev xlsatoms xlsclients xlsfonts xprop xvinfo xwininfo
 
@@ -39,10 +36,6 @@ for various information.
 
 %prep
 %setup -q -c %{name}-%{version} -a2 -a5 -a6 -a7 -a8 -a9 -a10 -a100
-
-pushd xwininfo-*
-%patch1 -p1
-popd
 
 %build
 # Build all apps
@@ -84,7 +77,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/xprop
 %{_bindir}/xvinfo
 %{_bindir}/xwininfo
-%{_mandir}/man1/edid-decode.1*
 %{_mandir}/man1/xdpyinfo.1*
 %{_mandir}/man1/xev.1*
 %{_mandir}/man1/xlsatoms.1*
@@ -95,41 +87,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/xwininfo.1*
 
 %changelog
-* Tue May 22 2018 Adam Jackson <ajax@redhat.com> - 7.5-23
-- xlsclients 1.1.4
-- xlsfonts 1.0.6
-- xprop 1.2.3
-- HTTPS URLs
-
-* Tue Mar 28 2017 Adam Jackson <ajax@redhat.com> - 7.5-22
-- New edid-decode snapshot
-
-* Wed Feb 08 2017 Adam Jackson <ajax@redhat.com> - 7.5-21
-- Sync with F25: xdpyinfo 1.3.2, xev 1.2.2, xlsatoms 1.1.2, xlsclients 1.1.3,
-  xlsfonts 1.0.5, xvinfo 1.1.3
-
-* Tue Mar 22 2016 Olivier Fourdan <ofourdan@redhat.com> 7.5-14
-- xwininfo: fix segfault on IO error (#1310021)
-
-* Wed Feb 12 2014 Adam Jackson <ajax@redhat.com> 7.5-13.1
-- Mass rebuild
-
-* Wed Jan 29 2014 Adam Jackson <ajax@redhat.com> 7.5-13
-- New edid-decode snapshot
-
-* Fri Aug 09 2013 Peter Hutterer <peter.hutterer@redhat.com> 7.5-12
-- Update sources for latest tarballs, some changes got lost before the commit
-- require gettext-devel for AM_ICONV (now required by xwininfo)
-
-* Fri Aug 09 2013 Peter Hutterer <peter.hutterer@redhat.com> 7.5-11
-- xprop 1.2.2
-- xwininfo 1.1.2
-- xdpyinfo 1.3.1
-- xvinfo 1.1.1
-
-* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 7.5-10
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
-
 * Thu Mar 07 2013 Dave Airlie <airlied@redhat.com> 7.5-9
 - autoreconf for aarch64
 
