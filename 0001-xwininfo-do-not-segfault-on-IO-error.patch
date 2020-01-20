@@ -1,0 +1,35 @@
+From 0c49f8f2bd56b1e77721e81030ea948386dcdf4e Mon Sep 17 00:00:00 2001
+From: Olivier Fourdan <ofourdan@redhat.com>
+Date: Tue, 6 Jan 2015 11:57:33 +0100
+Subject: [PATCH] xwininfo: do not segfault on IO error
+
+If the connection to the X server is lost while waiting for
+the user to select a window interactively, xwininfo segfaults.
+
+This is a regression introduced with the port to XCB, because
+xcb_wait_for_event() can return NULL in case of an IO error and
+xwininfo does not check for the actual returned value.
+
+Signed-off-by: Olivier Fourdan <ofourdan@redhat.com>
+Reviewed-by: Adam Jackson <ajax@redhat.com>
+Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+---
+ dsimple.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/dsimple.c b/dsimple.c
+index 6432e13..ca746e9 100644
+--- a/dsimple.c
++++ b/dsimple.c
+@@ -205,6 +205,8 @@ xcb_window_t Select_Window(xcb_connection_t *dpy,
+ 	xcb_allow_events (dpy, XCB_ALLOW_SYNC_POINTER, XCB_TIME_CURRENT_TIME);
+ 	xcb_flush (dpy);
+ 	event = xcb_wait_for_event (dpy);
++	if (event == NULL)
++	    Fatal_Error ("Fatal IO error");
+ 	switch (event->response_type & 0x7f) {
+ 	case XCB_BUTTON_PRESS:
+ 	{
+-- 
+2.5.0
+
