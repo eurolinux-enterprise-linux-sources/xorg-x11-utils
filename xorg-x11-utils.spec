@@ -3,7 +3,7 @@
 Summary: X.Org X11 X client utilities
 Name: xorg-x11-%{pkgname}
 Version: 7.5
-Release: 14%{?dist}
+Release: 13.1%{?dist}
 License: MIT
 Group: User Interface/X
 URL: http://www.x.org
@@ -19,8 +19,6 @@ Source10: ftp://ftp.x.org/pub/individual/app/xwininfo-1.1.3.tar.bz2
 
 Source100: edid-decode-20140129.tar.xz
 Source101: make-edid-decode-snapshot.sh
-
-Patch1: 0001-xwininfo-do-not-segfault-on-IO-error.patch
 
 BuildRequires: autoconf automake libtool
 BuildRequires: pkgconfig(xorg-macros)
@@ -39,10 +37,6 @@ for various information.
 
 %prep
 %setup -q -c %{name}-%{version} -a2 -a5 -a6 -a7 -a8 -a9 -a10 -a100
-
-pushd xwininfo-*
-%patch1 -p1
-popd
 
 %build
 # Build all apps
@@ -95,9 +89,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/xwininfo.1*
 
 %changelog
-* Tue Mar 22 2016 Olivier Fourdan <ofourdan@redhat.com> 7.5-14
-- xwininfo: fix segfault on IO error (#1310021)
-
 * Wed Feb 12 2014 Adam Jackson <ajax@redhat.com> 7.5-13.1
 - Mass rebuild
 
